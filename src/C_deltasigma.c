@@ -90,6 +90,40 @@ double integrand_large_scales(double lRz, void*params){
 }
 
 //Need to create a new function here only for small scales, when the nfw profile is assumed (or some other profile)
+int Sigma_at_R_small_scales_arr(double*R, int NR, double Rxi_min, double M, double conc, int delta, double om, double*Sigma){
+  double rhom = om*rhomconst*1e-12; //SM h^2/pc^2/Mpc; integral is over Mpc/h
+  integrand_params*params=malloc(sizeof(integrand_params));
+  //Assumes NFW for now
+  params->M = M;
+  params->conc= conc;
+  params->delta = delta;
+  params->om = om;
+  gsl_function F;
+  F.params = params;
+  F.function = &integrand_small_scales;
+  double result, err;
+  gsl_integration_workspace*workspace = gsl_integration_workspace_alloc(workspace_size);
+  int i;
+  for(i = 0; i < NR; i++){
+    gsl_integration_qag(&F, log(Rxi_min)-10, log(sqrt(Rxi_min*Rxi_min-R[i]*R[i])), TOL, TOL/10., workspace_size, 6, workspace, &result, &err);
+    Sigma[i] = result*rhom*2;
+  }
+  gsl_integration_workspace_free(workspace);
+  free(params);
+  return 0;
+}
+
+double Sigma_at_R_small_scales(double R, double Rxi_min, double M, double conc, int delta, double om){
+  double*Ra = (double*)malloc(sizeof(double));
+  double*Sigma = (double*)malloc(sizeof(double));
+  double result;
+  Ra[0] = R;
+  Sigma_at_R_small_scales_arr(Ra, 1, Rxi_min, M, conc, delta, om, Sigma);
+  result = Sigma[0];
+  free(Ra);
+  free(Sigma);
+  return result;
+}
 
 double Sigma_at_R(double R, double*Rxi, double*xi, int Nxi, double M, double conc, int delta, double om){
   double*Rs = (double*)malloc(sizeof(double));
