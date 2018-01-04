@@ -89,6 +89,8 @@ double integrand_large_scales(double lRz, void*params){
   return Rz * intercept*pow(sqrt(Rz*Rz + Rp*Rp), slope);
 }
 
+//Need to create a new function here only for small scales, when the nfw profile is assumed (or some other profile)
+
 double Sigma_at_R(double R, double*Rxi, double*xi, int Nxi, double M, double conc, int delta, double om){
   double*Rs = (double*)malloc(sizeof(double));
   double*Sigma = (double*)malloc(sizeof(double));
