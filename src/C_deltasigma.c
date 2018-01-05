@@ -159,6 +159,7 @@ int Sigma_at_R_arr(double*R, int NR, double*Rxi, double*xi, int Nxi, double M, d
   F.params = params;
   double result1, err1, result2, err2;
   int i;
+  //Make a result array and get the small scale resultin immediately if need be.
   
   for(i = 0; i < NR; i++){
     ln_z_max = log(sqrt(Rxi_max*Rxi_max - R[i]*R[i])); //Max distance to integrate to
