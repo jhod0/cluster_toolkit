@@ -20,8 +20,6 @@ _lib = _ffi.dlopen(lib_file)
 
 def _dcast(x):
     if type(x) is list: x = np.array(x, order='C')
-    #if type(x) is np.ndarray:
-    #    print "here", x.shape, x.flags    
     return _ffi.cast('double*', x.ctypes.data)
 
-from . import averaging, bias, boostfactors, concentration, deltasigma, density, massfunction, miscentering, xi
+from . import averaging, bias, boostfactors, concentration, deltasigma, density, massfunction, miscentering, util, xi
